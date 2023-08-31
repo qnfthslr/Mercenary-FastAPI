@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.router.socket_server.socket_server_exception import check_duplicate_request
+from app.socket_server.exception.request_duplication_exception import check_duplicate_request
 
 socket_server_router = APIRouter()
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.router.socket_server.socket_server_router import socket_server_router
+from app.socket_server.router.socket_server_router import socket_server_router
 
 app = FastAPI()
 
