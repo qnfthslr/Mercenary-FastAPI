@@ -22,3 +22,14 @@ def start_socket_server():
     server_instance.start()
 
     return True
+
+
+@socket_server_router.get("/finish-socket-server")
+def finish_socket_server():
+    print("finish socket server")
+
+    if server_instance is not None:
+        server_instance.kill_all_process()
+        return True
+    else:
+        return False
