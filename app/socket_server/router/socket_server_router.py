@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Request
 
 from app.socket_server.exception.request_duplication_exception import check_duplicate_request
 
@@ -33,3 +33,24 @@ def finish_socket_server():
         return True
     else:
         return False
+
+@socket_server_router.post("/ai-request-command")
+async def ai_request_command(request: Request):
+    print("ai-request-command")
+
+    try:
+        data = await request.json()
+        command = data.get("command")
+        data_str = data.get("data")
+
+        if server_instance is not None:
+            transmitter = server_instance.get_transmitter()
+        else:
+            return "First, you need to alloc socket server!"
+
+        transmitter.put_command_data(command, data_str)
+
+        return True
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
