@@ -29,13 +29,23 @@ def finish_socket_server():
 async def ai_request_command(request: Request):
     print("ai-request-command")
 
+    command = None
+    data_str = None
+
     try:
         data = await request.json()
-        command = data.get("command")
-        data_str = data.get("data")
-        print("command: ", command, ", data: ", data_str)
 
+        if isinstance(data, list):
+            for item in data:
+                command = item.get("command")
+                data_str = item.get("data")
+        else:
+            command = data.get("command")
+            data_str = data.get("data")
+
+        print("command: ", command, ", data: ", data_str)
         socket_server_queue.put((command, data_str))
+
         return True
 
     except Exception as e:
