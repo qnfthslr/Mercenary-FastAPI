@@ -5,10 +5,28 @@ import signal
 from multiprocessing import Process
 from time import sleep
 
-socket_server_module = importlib.import_module("app.includes.Mercenary-Socket-Server.socket_server")
+import os
+script_directory = os.path.dirname(__file__)
+print("script_directory: ", script_directory)
+
+module_path = "../includes/Mercenary-Socket-Server"
+absolute_module_path = os.path.abspath(os.path.join(script_directory, module_path))
+print("absolute_module_path: ", absolute_module_path)
+
+relative_module_path = os.path.relpath(absolute_module_path, os.path.abspath(os.getcwd()))
+print("relative_module_path: ", relative_module_path)
+
+relative_module_path_for_importlib = relative_module_path.replace(os.path.sep, ".").lstrip(".")
+print("relative_module_path_for_importlib: ", relative_module_path_for_importlib)
+
+relative_module_path_for_importlib += ".socket_server"
+print("relative_module_path_for_importlib: ", relative_module_path_for_importlib)
+
+socket_server_module = importlib.import_module(relative_module_path_for_importlib)
+#socket_server_module = importlib.import_module("app.includes.Mercenary-Socket-Server.socket_server")
 server_instance = None
 
-import os
+
 
 
 # 사실 이 파트는 command_controller 라고 만드는 것이 더 좋았을 것이다
