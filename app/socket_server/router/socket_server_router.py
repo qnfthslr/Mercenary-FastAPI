@@ -74,3 +74,12 @@ async def ai_request_command(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@socket_server_router.get("/ai-response")
+def ai_response_result():
+    print("ai-response-result");
+
+    ai_response_result = system_queue_module.socket_server_response_queue.get()
+
+    return ai_response_result
+
