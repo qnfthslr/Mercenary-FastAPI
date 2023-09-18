@@ -1,4 +1,6 @@
 import importlib
+# 스크립트 실행 중에 동적을 모듈을 로드하고 사용해야 하는 상황에서 사용
+
 import multiprocessing
 import queue
 import signal
@@ -24,10 +26,9 @@ print("relative_module_path_for_importlib: ", relative_module_path_for_importlib
 
 socket_server_module = importlib.import_module(relative_module_path_for_importlib)
 #socket_server_module = importlib.import_module("app.includes.Mercenary-Socket-Server.socket_server")
+
 server_instance = None
-
-
-
+# 소켓 서버 인스턴스를 나타내는 변수 // exception 에서 처리함
 
 # 사실 이 파트는 command_controller 라고 만드는 것이 더 좋았을 것이다
 def run_socket_server(fastapi_queue, socket_server_queue, main_process_id):
@@ -46,14 +47,15 @@ def run_socket_server(fastapi_queue, socket_server_queue, main_process_id):
 
     pid_queue = multiprocessing.Queue()
 
-    # 큐를 통해 FastAPI 애플리케이션과 통신
+    # Queue를 통해 FastAPI 애플리케이션과 통신
     while True:
         try:
             command = fastapi_queue.get(block=False)
             print("receive - command: ", command)
 
-            if command == 4:
+            if command == 4: # 4 일 때
                 if main_socket_process and main_socket_process.is_alive():
+                    # 실행 중 일때
                     socket_pid = main_socket_process.pid
                     print("socket pid: ", socket_pid)
 
@@ -78,6 +80,7 @@ def run_socket_server(fastapi_queue, socket_server_queue, main_process_id):
 
                     #main_socket_process.join()  # Wait for the process to complete (optional)
                     #main_socket_process.terminate()
+
                     main_socket_process = None
                     transmitter = None
 
